@@ -1,6 +1,8 @@
 <template>
-  <div>陈大爷超级牛皮</div>
-  <button @click="send">发送消息</button>
+  <div>
+    <input type="number" v-model.number="goodsID" />
+    <button @click="sendOfferMessage">发送消息</button>
+  </div>
 </template>
 
 <script lang="ts">
@@ -12,12 +14,19 @@ export default defineComponent({
   created() {
     startSocket();
   },
+  data() {
+    return {
+      goodsID: 0,
+    };
+  },
   methods: {
-    send: async function () {
+    sendOfferMessage: async function () {
       try {
         const res = await sendMessage({
-          path: "echo",
-          params: "666",
+          path: "offer",
+          params: {
+            goodsID: this.goodsID,
+          },
         });
       } catch (e) {
         console.log(e);

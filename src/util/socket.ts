@@ -1,3 +1,5 @@
+import methods from './methods'
+
 let socketTask: WebSocket // socket实例
 let messageID = 1 // 消息的唯一标识
 // promise两个参数的类型
@@ -8,9 +10,9 @@ type messageRes = {
 // resType 接收到的参数类型
 type resType = {
   code: number;
+  cmd: string;
   message: string;
   type: string;
-  msgTime: number;
   messageID: number;
   data: any;
 }
@@ -25,9 +27,17 @@ type sendMessageType = {
 const messageMap: Map<number, messageRes> = new Map()
 
 const startSocket = () => {
-  socketTask = new WebSocket("ws://192.168.1.12:3000/ws")
+  socketTask = new WebSocket("ws://192.168.2.107:3000/ws")
   socketTask.onmessage = (e) => {
     const res: resType = JSON.parse(e.data)
+    // 收到消息调用方法
+    try {
+      const socketCmdFunc = methods.get(res.cmd) as (data: any) => void
+      socketCmdFunc(res.data)
+    } catch (e) {
+      console.warn("收到命令", res.cmd, "但未定义处理方法")
+    }
+
     switch (res.code) {
       case 0:
         // 发送成功
@@ -49,9 +59,6 @@ const startSocket = () => {
     if (res.messageID !== 0) {
       messageMap.delete(res.messageID)
     }
-  }
-  socketTask.onopen = () => {
-    console.log("连接成功")
   }
 }
 
