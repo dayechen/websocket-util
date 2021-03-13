@@ -5,12 +5,11 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { defineComponent } from "vue";
-import { sendMessage, startSocket } from "./util/socket";
+import { sendMessage, startSocket } from "./util/socket.js";
 
-export default defineComponent({
-  name: "App",
+export default{
   created() {
     startSocket();
   },
@@ -20,20 +19,18 @@ export default defineComponent({
     };
   },
   methods: {
-    sendOfferMessage: async function () {
-      try {
-        const res = await sendMessage({
-          path: "offer",
-          params: {
-            goodsID: this.goodsID,
-          },
-        });
-      } catch (e) {
-        console.log(e);
-      }
+    sendOfferMessage(){
+      sendMessage({
+        event:"test"
+      })
     },
   },
-});
+}
+
+// export default defineComponent({
+//   name: "App",
+
+// });
 </script>
 
 <style>
