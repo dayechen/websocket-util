@@ -22,6 +22,8 @@ export default{
     sendOfferMessage(){
       sendMessage({
         event:"test"
+      }).then(res =>{
+        console.log("收到消息",res)
       })
     },
   },
