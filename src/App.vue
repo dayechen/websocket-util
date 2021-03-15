@@ -7,23 +7,29 @@
 
 <script lang="js">
 import { defineComponent } from "vue";
-import { sendMessage, startSocket } from "./util/socket.js";
+import socket from "./util/socket.js";
 
 export default{
   created() {
-    startSocket();
+    this.socket = new socket()
+    this.socket.startSocket()
+    this.socket.on("test",res=>{
+      console.log("收到消息",res)
+    })
   },
   data() {
     return {
       goodsID: 0,
+      socket:null
     };
   },
   methods: {
     sendOfferMessage(){
-      sendMessage({
-        event:"test"
-      }).then(res =>{
-        console.log("收到消息",res)
+     this.socket.sendMessage({
+        event:"test",
+        params:{
+          "name":"cao"
+        }
       })
     },
   },
